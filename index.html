@@ -3,212 +3,111 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>대학언해 - 전장 성독 챌린지</title>
+<title>대학 성독 스터디 - 聖讀 Challenge</title>
 <style>
   * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    background: #2c3e50;
-    color: white;
-    font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
-    min-height: 100vh;
-    justify-content: center;
-    padding: 20px;
-  }
-
-  #status {
-    font-size: 18px;
-    margin-bottom: 15px;
-    color: #f1c40f;
-    display: flex;
-    gap: 25px;
-    font-weight: bold;
-    z-index: 10;
-  }
-
-  #display-box {
-    width: 95%;
-    max-width: 700px;
-    background: #fffdf5;
-    color: #333;
-    padding: 50px 35px 35px;
-    border-radius: 20px;
-    text-align: center;
-    box-shadow: 0 15px 35px rgba(0,0,0,0.4);
-    margin-bottom: 25px;
-    transition: all 0.3s;
-    border: 6px double #d4af37;
-    position: relative;
-  }
+  body { margin: 0; display: flex; flex-direction: column; align-items: center; background: #2c3e50; color: white; font-family: 'Apple SD Gothic Neo', sans-serif; min-height: 100vh; justify-content: center; padding: 20px; }
+  #status { font-size: 15px; margin-bottom: 15px; color: #f1c40f; display: flex; flex-wrap: wrap; gap: 15px; font-weight: bold; justify-content: center; }
+  .difficulty-tag { background: #e67e22; color: white; padding: 2px 10px; border-radius: 10px; font-size: 13px; }
+  #display-box { width: 95%; max-width: 750px; background: #fffdf5; color: #333; padding: 50px 35px; border-radius: 20px; text-align: center; box-shadow: 0 15px 35px rgba(0,0,0,0.4); border: 6px double #d4af37; margin-bottom: 20px; transition: 0.3s; position: relative; }
   #display-box.correct { border-color: #2ecc71; background: #f0fff4; }
-  #display-box.wrong   { border-color: #e74c3c; background: #fff5f5; }
-
-  .chapter-tag {
-    position: absolute;
-    top: 15px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: #d4af37;
-    color: white;
-    padding: 4px 15px;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: bold;
-  }
-
-  .hanja { 
-    font-size: 40px; 
-    margin: 10px 0; 
-    font-weight: bold; 
-    line-height: 1.5; 
-    word-break: keep-all; 
-    font-family: 'Gungsuh', serif; 
-  }
-  .hint  { color: #7f8c8d; margin-top: 20px; font-size: 16px; border-top: 1px solid #eee; padding-top: 15px; }
-
-  #timer-wrap {
-    width: 95%;
-    max-width: 700px;
-    background: #34495e;
-    border-radius: 10px;
-    height: 16px;
-    margin-bottom: 20px;
-    overflow: hidden;
-  }
-  #timer-bar {
-    height: 100%;
-    width: 100%;
-    background: #2ecc71;
-    transition: width 1s linear;
-  }
-
-  #feedback-box {
-    width: 95%;
-    max-width: 700px;
-    min-height: 60px;
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 20px;
-    font-weight: bold;
-    margin-bottom: 20px;
-    background: rgba(255,255,255,0.1);
-    padding: 10px 25px;
-    text-align: center;
-  }
+  #display-box.wrong { border-color: #e74c3c; background: #fff5f5; }
+  .hanja { font-size: 32px; margin: 0; font-weight: bold; line-height: 1.6; word-break: keep-all; font-family: 'Gungsuh', serif; }
+  .chapter-tag { position: absolute; top: 15px; left: 50%; transform: translateX(-50%); background: #d4af37; color: white; padding: 4px 15px; border-radius: 20px; font-size: 14px; font-weight: bold; }
+  #timer-wrap { width: 95%; max-width: 750px; background: #34495e; border-radius: 10px; height: 12px; margin-bottom: 20px; overflow: hidden; }
+  #timer-bar { height: 100%; width: 100%; background: #2ecc71; transition: width 1s linear; }
+  #feedback-box { width: 95%; max-width: 750px; min-height: 65px; border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 19px; font-weight: bold; margin-bottom: 20px; background: rgba(255,255,255,0.1); padding: 10px 25px; text-align: center; }
   #feedback-box.correct { background: #27ae60; color: white; }
-  #feedback-box.wrong   { background: #c0392b; color: white; }
-
-  #mic-btn {
-    width: 110px;
-    height: 110px;
-    border-radius: 50%;
-    border: none;
-    background: #e74c3c;
-    color: white;
-    font-size: 45px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.3s;
-    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
-  }
-  #mic-btn.active {
-    background: #2ecc71;
-    box-shadow: 0 0 30px #2ecc71;
-    transform: scale(1.1);
-    animation: pulse 1.5s infinite;
-  }
+  #feedback-box.wrong { background: #c0392b; color: white; }
+  #mic-btn { width: 90px; height: 90px; border-radius: 50%; border: none; background: #e74c3c; color: white; font-size: 35px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.3s; box-shadow: 0 8px 20px rgba(0,0,0,0.3); }
+  #mic-btn.active { background: #2ecc71; box-shadow: 0 0 30px #2ecc71; transform: scale(1.1); animation: pulse 1.5s infinite; }
   @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.8; } 100% { opacity: 1; } }
-
-  #result-screen { display: none; flex-direction: column; align-items: center; text-align: center; }
-  #restart-btn {
-    margin-top: 30px;
-    padding: 15px 45px;
-    font-size: 22px;
-    border-radius: 40px;
-    border: none;
-    background: #d4af37;
-    color: #2c3e50;
-    font-weight: bold;
-    cursor: pointer;
-  }
 </style>
 </head>
 <body>
 
 <div id="status">
-  <span>장(章): <span id="ch-name">經 1장</span></span>
-  <span>진행: <span id="lvl">1</span> / <span id="total">-</span></span>
-  <span>정답: <span id="score">0</span></span>
+  <span>장(章): <span id="ch-name">-</span></span>
+  <span>단계: <span id="lvl">1</span> / <span id="total">-</span></span>
+  <span id="diff-display" class="difficulty-tag">난이도: 입풀기</span>
 </div>
 
 <div id="game-area" style="display: flex; flex-direction: column; align-items: center; width: 100%;">
   <div id="timer-wrap"><div id="timer-bar"></div></div>
-
   <div id="display-box">
-    <div class="chapter-tag" id="tag-text">大學 經一章</div>
-    <p class="hanja" id="target-hanja">大學之道 在明明德 在親民 在止於至善</p>
-    <p class="hint">마이크를 누르고 언해본 토(吐)를 포함하여 낭독하세요.</p>
+    <div class="chapter-tag" id="tag-text">大學 經一장</div>
+    <p class="hanja" id="target-hanja"></p>
   </div>
-
-  <div id="feedback-box">성독 준비가 되셨나요? 마이크를 누르세요.</div>
-
+  <div id="feedback-box">성독 준비가 되셨나요?</div>
   <button id="mic-btn">🎙️</button>
 </div>
 
-<div id="result-screen">
-  <h2 style="color:#f1c40f; font-size:40px;">🎊 대학 완독 대성공! 🎊</h2>
-  <p style="font-size:24px;">성인의 가르침을 목소리로 온전히 새기셨습니다.</p>
-  <p>총 구절: <strong id="r-total">-</strong> | 정답: <strong id="r-score" style="color:#2ecc71">-</strong></p>
-  <button id="restart-btn" onclick="location.reload()">🔄 다시 정진하기</button>
+<div id="result-screen" style="display:none; text-align:center;">
+  <h2 style="color:#f1c40f; font-size:40px;">🎊 대학 전장 완독 대성공! 🎊</h2>
+  <p style="font-size:20px;">성현의 가르침이 교수님의 목소리에 담겼습니다.</p>
+  <button onclick="location.reload()" style="margin-top:20px; padding:15px 40px; border-radius:30px; border:none; background:#d4af37; cursor:pointer;">다시 정진하기</button>
 </div>
 
 <script>
-// 1. 대학언해 經 1장 ~ 傳 10장 전체 통합 데이터
 const quizData = [
+  // [經 1장]
   { c: "經 1장", h: "大學之道 在明明德 在親民 在止於至善", a: "대학지도는재명명덕하며재친민하며재지어지선이니라" },
   { c: "經 1장", h: "知止而后 有定 定而后 能靜 靜而后 能安", a: "지지이후에유정이니정이후에능정하며정이후에능안하며" },
   { c: "經 1장", h: "安而后 能慮 慮而后 能得", a: "안이후에능려하며려이후에능득이니라" },
   { c: "經 1장", h: "物有本末 事有終始 知所先後 則近道矣", a: "물유본말하고사유종시하니지소선후면즉근도의리라" },
   { c: "經 1장", h: "古之欲明明德於天下者 先治其國", a: "고지욕명명덕어천하자는선치기국하고" },
-  { c: "經 1장", h: "欲治其國者 先齊 그 家 欲齊其家者 先修其身", a: "욕치기국자는선제기가하고욕제기가자는선수기신하며" },
+  { c: "經 1장", h: "欲治其國者 先齊其家 欲齊其家者 先修其身", a: "욕치기국자는선제기가하고욕제기가자는선수기신하며" },
   { c: "經 1장", h: "欲修其身者 先正其心 欲正其心者 先誠其意", a: "욕수기신자는선정기심하고욕정기심자는선성기의하며" },
-  { c: "經 1장", h: "欲誠其意者 先致其知 致知 在格物", a: "욕성기의자는선치기지하니치지는재격물하니라" },
+  { c: "經 1장", h: "欲誠其意자 先致其知 致知 在格物", a: "욕성기의자는선치기지하니치지는재격물하니라" },
   { c: "經 1장", h: "物格而后 知至 知至而后 意誠 意誠而后 心正", a: "물격이후에지지하고지지이후에의성하고의성이후에심정하고" },
-  { c: "經 1장", h: "心正而后 身修 身修而后 家齊 家齊而后 國治", a: "심정이후에신수하고신수이후에제개하고제개이후에국치하고" },
-  { c: "經 1장", h: "國治而后 天下平 自天子 以至於庶人 壹是皆以修身爲本", a: "국치이후에천하평이니라자천자로이지어서인히일시개이수신위본이니라" },
+  { c: "經 1장", h: "心正而后 身修 身修而后 家齊 家齊而后 國治", a: "심정이후에신수하고신수이후에제가하고제가이후에국치하고" },
+  { c: "經 1장", h: "國治而后 天하平 自天子 以至於庶人 壹是皆以修身爲本", a: "국치이후에천하평이니라자천자로이지어서인히일시개이수신위본이니라" },
   { c: "經 1장", h: "其本 亂而末治者 否矣 其所厚者 薄 而其所薄자 厚 未之有也", a: "기본이란이말치자는부의니기소후자애박이오기소박자애후미지유야니라" },
+  // [傳 1~2장]
   { c: "傳 1장", h: "康誥 曰 克明德 太甲 曰 顧諟天之明命", a: "강고에왈극명덕이라하며태갑에왈고시천지명명이라하며" },
-  { c: "傳 1장", h: "帝典 曰 克明峻德 皆自明也", a: "제전에왈극명준덕이라하니개자명야니라" },
+  { c: "傳 1장", h: "帝典 曰 克明峻德 皆자明也", a: "제전에왈극명준덕이라하니개자명야니라" },
   { c: "傳 2장", h: "湯之盤銘 曰 苟日新 日日新 又日新", a: "탕지반명에왈구일신이어든일일신하고우일신이라하며" },
-  { c: "傳 2장", h: "康誥 曰 작新民 詩 曰 周雖舊邦 其命維新", a: "강고에왈작신민이라하며시에왈주수구방이나기명유신이라하니" },
+  { c: "傳 2장", h: "康誥 曰 作新民 詩 曰 周雖舊邦 其命維新", a: "강고에왈작신민이라하며시에왈주수구방이나기명유신이라하니" },
+  // [傳 3장]
   { c: "傳 3장", h: "詩云 邦畿千里 惟民所止 緡蠻黃鳥 止于丘隅", a: "시운에방기천리유민소지라하니라시운에민만황조지우구우여라" },
   { c: "傳 3장", h: "子 曰 於止 知其所止 可以人而不如鳥乎", a: "자왈어지애지기소지여라하야늘이예로소니아가이인이불여조호아" },
   { c: "傳 3장", h: "爲人君 止於仁 爲人臣 止於敬 爲人子 止於孝 爲人父 止於慈", a: "위인군하시고는지어인하시고위인신하시고는지어경하시고위인자하시고는지어효하시고위인부하시고는지어자하시고" },
-  { c: "傳 4장", h: "子 曰 聽訟 吾猶人야 必也使無訟乎", a: "자왈청송이오유인야나필야사무송호인뎌하시니" },
+  { c: "傳 3장", h: "與國人交 止於信 瞻彼淇澳 菉竹猗猗", a: "여국인교하시고는지어신이니라첨피기욱혼대록죽여의로다" },
+  { c: "傳 3장", h: "有斐君子 如切如磋 如琢如磨", a: "유비군자여여절여차하며여탁여마로다" },
+  { c: "傳 3장", h: "瑟兮僩兮 赫兮喧兮 有斐君子 終不可喧兮", a: "슬혜한혜며혁혜훤혜니유비군자종불가훤혜로다" },
+  { c: "傳 3장", h: "如切如磋者 道學也 如琢如磨者 自修也", a: "여절여차자는도학야오여탁여마자는자수야오" },
+  // [傳 4~6장]
+  { c: "傳 4장", h: "子 曰 聽訟 吾猶人也 必也使無訟乎", a: "자왈청송이오유인야나필야사무송호인뎌하시니" },
   { c: "傳 5장", h: "此謂知本 此謂知之至也", a: "차위지본이니라차위지지지야니라" },
   { c: "傳 6장", h: "所謂誠其意者 毋自欺也 如惡惡臭 如好好色", a: "소위성기의자는무자기야니여오악취하며여호호색이니라" },
+  { c: "傳 6장", h: "小人 閒居 爲不善 無所不至 見君子而后 厭然", a: "소인이한거애위불선호대무소부지하다가견군자이후에염연하며" },
   { c: "傳 6장", h: "曾子 曰 十目所視 十手所指 其嚴乎", a: "증자왈십목소시며십수소지니기엄호인뎌" },
+  { c: "傳 6장", h: "富潤屋 德潤身 心廣體胖 故 君子 必誠其意", a: "부윤옥이오덕윤신이라심광체반하나니시이로군자는필성기의니라" },
+  // [傳 7~8장]
   { c: "傳 7장", h: "所謂脩身 在正其心者 身有所忿懥 則不得其正", a: "소위수신이재정기심자는신유소분치즉부득기정하며" },
+  { c: "傳 7장", h: "心不在焉 視而不見 聽而不聞 食而不知其味", a: "심불재언이면시이불견하며청이불문하며식이부지기미니라" },
   { c: "傳 8장", h: "人 之其所親愛而 辟焉 之其所賤惡而 辟焉", a: "인지기소친애이벽하며지기소천오이벽하며" },
-  { c: "傳 9장", h: "所謂治국 必先齊其家者 其家 不可敎 而能敎人者 無之", a: "소위치국이필선제기가자는기가를불가교오이능교인자는무지하니" },
-  { c: "傳 9장", h: "一家 仁 一國 興仁 一家 讓 一國 興讓", a: "일가인이면일국이흥인하고일가양이면일국이흥양하고" },
-  { c: "傳 9장", h: "堯舜 帥天下以仁 而民 從之", a: "요순이수천하이인하시대이민이종하고" },
+  { c: "傳 8장", h: "故 好而知其惡 惡而知其美者 天下 鮮矣", a: "고로호이지기악하며오이지기미자는천하에선의니라" },
+  // [傳 9장]
+  { c: "傳 9장", h: "所謂治國 必先齊其家者 其家 不可敎 而能敎人者 無之", a: "소위치국이필선제기가자는기가를불가교오이능교인자는무지하니" },
+  { c: "傳 9장", h: "一家 仁 一國 興仁 一가 讓 一國 興讓", a: "일가인이면일국이흥인하고일가양이면일국이흥양하고" },
+  { c: "傳 9장", h: "堯舜 帥天下以仁 而民 從之 桀紂 帥天下以暴 而民 從之", a: "요순이수천하이인하시대이민이종하고걸주가수천하이폭한대이민이종하니" },
+  { c: "傳 9장", h: "君子 有諸己而后 求諸人 無諸己而后 非諸人", a: "군자는유제기이후에구제인하며무제기이후에비제인하나니" },
+  { c: "傳 9장", h: "宜兄宜弟 宜兄宜弟而后 可以敎國人", a: "의형의제라하니의형의제이후에가이교국인이니라" },
+  // [傳 10장]
+  { c: "傳 10장", h: "所謂平天下 在治其國者 上 老老而民 興孝", a: "상에노노이민이흥효하며" },
+  { c: "傳 10장", h: "上 長長而민 興弟 上 恤孤而民 不倍", a: "상에장장이민이흥제하며상에휼고이민이불배하나니" },
   { c: "傳 10장", h: "是以 君子 有絜矩之道也", a: "시이로군자는유혈구지도야니라" },
   { c: "傳 10장", h: "道得衆則得國 失衆則失國", a: "도득중즉득국하고실중즉실국이니라" },
-  { c: "傳 10장", h: "德者 本也 財者 末也 外本內末 爭民施奪", a: "덕자는본야오재자는말야니외본내말이면쟁민시탈이니라" },
+  { c: "傳 10장", h: "德者 本也 財者 末也 外本內末 쟁民施奪", a: "덕자는본야오재자는말야니외본내말이면쟁민시탈이니라" },
+  { c: "傳 10장", h: "是故 財聚則民散 財散則民聚", a: "시이로재취즉민산하고재산즉민취니라" },
   { c: "傳 10장", h: "生財 有大道 生之者 衆 食之者 寡", a: "생재유대도하니생지자중하고식지자과하며" },
   { c: "傳 10장", h: "爲之者 疾 用之者 舒 則財恒足矣", a: "위지자질하고용지자서하면즉재항족의리라" },
+  { c: "傳 10장", h: "仁者 以財發身 不仁者 以身發財", a: "인자는이재발신하고불인자는이신발재니라" },
   { c: "傳 10장", h: "國 不以利爲利 以義爲利也", a: "국은불이리위리요이의위리야니라" }
 ];
 
-let currentIndex = 0, score = 0, timeLeft = 30, timerInterval = null;
+let currentIndex = 0, timeLeft = 45, currentLimit = 45, currentAcc = 0.6, timerInterval = null, isListening = false;
 const micBtn = document.getElementById('mic-btn'), feedbackBox = document.getElementById('feedback-box');
 const hanjaDisplay = document.getElementById('target-hanja'), timerBar = document.getElementById('timer-bar');
 
@@ -217,11 +116,20 @@ recognition.lang = 'ko-KR'; recognition.interimResults = false;
 
 document.getElementById('total').innerText = quizData.length;
 
+function setDifficulty() {
+  const step = Math.floor(currentIndex / 5);
+  const diffDisplay = document.getElementById('diff-display');
+  if (step === 0) { currentLimit = 45; currentAcc = 0.6; diffDisplay.innerText = "난이도: 입풀기"; diffDisplay.style.background = "#2ecc71"; }
+  else if (step === 1) { currentLimit = 40; currentAcc = 0.7; diffDisplay.innerText = "난이도: 집중"; diffDisplay.style.background = "#f1c40f"; }
+  else if (step === 2) { currentLimit = 35; currentAcc = 0.75; diffDisplay.innerText = "난이도: 정진"; diffDisplay.style.background = "#e67e22"; }
+  else { currentLimit = 30; currentAcc = 0.8; diffDisplay.innerText = "난이도: 심화"; diffDisplay.style.background = "#e74c3c"; }
+}
+
 function startTimer() {
-  clearInterval(timerInterval); timeLeft = 30;
+  clearInterval(timerInterval); timeLeft = currentLimit;
   timerInterval = setInterval(() => {
-    timeLeft--; timerBar.style.width = (timeLeft / 30 * 100) + '%';
-    if (timeLeft <= 0) { clearInterval(timerInterval); handleResult(false, "⏰ 시간 초과! 다시 읽어봅시다."); }
+    timeLeft--; timerBar.style.width = (timeLeft / currentLimit * 100) + '%';
+    if (timeLeft <= 0) { clearInterval(timerInterval); handleResult(false, "⏰ 시간 초과! 다시 읽어보세요."); }
   }, 1000);
 }
 
@@ -229,48 +137,45 @@ function handleResult(isCorrect, msg) {
   clearInterval(timerInterval);
   feedbackBox.innerText = msg;
   feedbackBox.className = isCorrect ? 'correct' : 'wrong';
-  if (isCorrect) { score++; highlightBox('correct'); } else { highlightBox('wrong'); }
-  document.getElementById('score').innerText = score;
+  const box = document.getElementById('display-box');
+  box.className = isCorrect ? 'correct' : 'wrong';
   micBtn.disabled = true;
   setTimeout(() => {
-    micBtn.disabled = false; currentIndex++;
-    if (currentIndex < quizData.length) { updateDisplay(); } else { endGame(); }
-  }, 2000);
-}
-
-function highlightBox(type) {
-  const box = document.getElementById('display-box');
-  box.className = type;
-  setTimeout(() => { box.className = ''; }, 1500);
+    box.className = '';
+    micBtn.disabled = false;
+    if (isCorrect) { currentIndex++; if (currentIndex < quizData.length) { updateDisplay(); } else { endGame(); } }
+    else { updateDisplay(); }
+  }, 2200);
 }
 
 function updateDisplay() {
+  setDifficulty();
   const data = quizData[currentIndex];
   document.getElementById('lvl').innerText = currentIndex + 1;
   document.getElementById('ch-name').innerText = data.c;
   document.getElementById('tag-text').innerText = "大學 " + data.c;
   hanjaDisplay.innerText = data.h;
-  feedbackBox.innerText = "준비되셨나요? 마이크를 누르세요.";
+  feedbackBox.innerText = "마이크를 누르고 낭독하세요.";
   feedbackBox.className = ''; timerBar.style.width = '100%';
 }
 
-micBtn.onclick = () => { recognition.start(); micBtn.classList.add('active'); startTimer(); };
-recognition.onresult = (event) => {
-  micBtn.classList.remove('active');
-  const said = event.results[0][0].transcript.replace(/[\s\.\,\?\!]/g, '');
-  const target = quizData[currentIndex].a;
-  if (target.includes(said) || said.includes(target)) handleResult(true, "✔️ 正答입니다! 유창하십니다.");
-  else handleResult(false, `❌ 인식 결과: "${event.results[0][0].transcript}"`);
-};
-
-function endGame() {
-  document.getElementById('game-area').style.display = 'none';
-  document.getElementById('status').style.display = 'none';
-  document.getElementById('result-screen').style.display = 'flex';
-  document.getElementById('r-total').innerText = quizData.length;
-  document.getElementById('r-score').innerText = score;
+function checkAnswer(said, target) {
+  const cleanSaid = said.replace(/[\s\.\,\?\!]/g, "");
+  const cleanTarget = target.replace(/[\s\.\,\?\!]/g, "");
+  let matchCount = 0;
+  for (let i = 0; i < cleanTarget.length; i++) { if (cleanSaid.includes(cleanTarget[i])) matchCount++; }
+  return (matchCount / cleanTarget.length) > currentAcc;
 }
 
+micBtn.onclick = () => { if (isListening) return; recognition.start(); micBtn.classList.add('active'); isListening = true; startTimer(); };
+recognition.onresult = (event) => {
+  isListening = false; micBtn.classList.remove('active');
+  const said = event.results[0][0].transcript;
+  if (checkAnswer(said, quizData[currentIndex].a)) handleResult(true, "✔️ 正答입니다!");
+  else handleResult(false, `❌ 인식: "${said}"`);
+};
+recognition.onerror = () => { isListening = false; micBtn.classList.remove('active'); handleResult(false, "⚠️ 다시 시도해주세요."); };
+function endGame() { document.getElementById('game-area').style.display = 'none'; document.getElementById('status').style.display = 'none'; document.getElementById('result-screen').style.display = 'block'; }
 updateDisplay();
 </script>
 </body>
