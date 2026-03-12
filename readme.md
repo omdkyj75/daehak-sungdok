@@ -19,7 +19,7 @@
 
 ## 🔗 학습 바로가기
 * [👉 모드 1: 한자 음훈 스와이프 게임](https://omdkyj75.github.io/daehak_seo/)
-* [👉 모드 2: 대학언해 성독 챌린지](https://omdkyj75.github.io/daehak_seo/reading.html)
+* [👉 모드 2: 대학언해 성독 챌린지](https://omdkyj75.github.io/daehak-sungdok/reading.html)
 
 ---
 
